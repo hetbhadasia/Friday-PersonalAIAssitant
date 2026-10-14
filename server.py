@@ -1,7 +1,10 @@
+
 """
 Friday MCP Server — Entry Point
 Run with: python server.py
 """
+
+import os
 
 from mcp.server.fastmcp import FastMCP
 from friday.tools import register_all_tools
@@ -12,6 +15,8 @@ from friday.config import config
 # Create the MCP server instance
 mcp = FastMCP(
     name=config.SERVER_NAME,
+    host=os.getenv("MCP_SERVER_HOST", "0.0.0.0"),
+    port=int(os.getenv("PORT", os.getenv("MCP_SERVER_PORT", "8000"))),
     instructions=(
         "You are Friday, a Tony Stark-style AI assistant. "
         "You have access to a set of tools to help the user. "
@@ -24,8 +29,10 @@ register_all_tools(mcp)
 register_all_prompts(mcp)
 register_all_resources(mcp)
 
+
 def main():
-    mcp.run(transport='sse')
+    mcp.run(transport="sse")
+
 
 if __name__ == "__main__":
     main()
