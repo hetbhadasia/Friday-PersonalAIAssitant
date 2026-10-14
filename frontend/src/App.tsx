@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import '@livekit/components-styles';
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8080").replace(/\/$/, "");
+
 const playgroundCommands = [
   {
     title: 'World News Briefing',
@@ -194,7 +196,7 @@ export function PlaygroundSidebar({
   const fetchOrders = async () => {
     setLoadingOrders(true);
     try {
-      const res = await fetch("http://127.0.0.1:8080/api/v1/bookings");
+      const res = await fetch(`${API_BASE_URL}/api/v1/bookings`);
       if (res.ok) {
         const data = await res.json();
         setOrders(data.orders || []);
@@ -460,7 +462,7 @@ export function PlaygroundSidebar({
                           type="button"
                           onClick={async () => {
                             try {
-                              const r = await fetch(`http://127.0.0.1:8080/api/v1/bookings/${order.order_id}/cancel`, {
+                              const r = await fetch(`${API_BASE_URL}/api/v1/bookings/${order.order_id}/cancel`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ reason: 'User clicked cancel in UI' }),
@@ -485,7 +487,7 @@ export function PlaygroundSidebar({
                       )}
                       {order.payment_session_id && order.payment_status !== 'paid' && order.status !== 'cancelled' && (
                         <a
-                          href={`http://127.0.0.1:8080/api/v1/payments/${order.payment_session_id}/checkout`}
+                          href={`${API_BASE_URL}/api/v1/payments/${order.payment_session_id}/checkout`}
                           target="_blank"
                           rel="noreferrer"
                           style={{
@@ -525,7 +527,7 @@ function App() {
     setError(null);
     try {
       const query = new URLSearchParams({ room_name: roomName, identity });
-      const res = await fetch(`http://127.0.0.1:8080/api/token?${query}`);
+      const res = await fetch(`${API_BASE_URL}/api/token?${query}`);
       if (!res.ok) {
         throw new Error('Failed to get connection token. Ensure the token server is running at :8080.');
       }
