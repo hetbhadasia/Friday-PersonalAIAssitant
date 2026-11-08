@@ -134,6 +134,10 @@ class ProviderConfig:
     # Groq (primary free LLM)
     GROQ_API_KEY: str = _env("GROQ_API_KEY", "")
     GROQ_MODEL: str = _env("GROQ_LLM_MODEL", "llama-3.3-70b-versatile")
+    GROQ_VISION_MODEL: str = _env(
+        "GROQ_VISION_MODEL",
+        "meta-llama/llama-4-scout-17b-16e-instruct",
+    )
 
     # Deepgram (optional alternate)
     DEEPGRAM_API_KEY: str = _env("DEEPGRAM_API_KEY", "")

@@ -15,6 +15,9 @@ An enterprise-grade, Tony Stark-inspired AI voice assistant built with:
 
 ## 🏗️ Architecture & Data Flow
 
+Project class and voice request sequence diagrams are available in
+[DIAGRAMS.md](./DIAGRAMS.md).
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                   React 19 + Vite Frontend                  │

@@ -453,12 +453,12 @@ body {
   color: #cbd8ff;
 }
 
-.connection-logo {
+.friday-logo {
   display: block;
-  width: min(90vw, 620px);
+  width: min(90%, 700px);
   height: auto;
-  margin: 0 0 0.8rem;
-  filter: drop-shadow(0 12px 28px rgba(54, 137, 255, 0.16));
+  object-fit: contain;
+  background: transparent;
 }
 
 .subheading {

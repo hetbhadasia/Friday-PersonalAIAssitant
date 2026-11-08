@@ -1,4 +1,4 @@
-# F.R.I.D.A.Y. Architecture Reference
+GIVE# F.R.I.D.A.Y. Architecture Reference
 
 > **Guiding Principle:** EXTEND, DON'T REPLACE. PRESERVE, THEN IMPROVE.  
 > F.R.I.D.A.Y. V3 introduces a transactional action subsystem while maintaining zero breaking changes to the four-process execution baseline.
@@ -62,7 +62,219 @@ F.R.I.D.A.Y. operates as four cooperating, decoupled processes:
 
 ---
 
-## 2. Universal Order Lifecycle & Finite State Machine
+## 2. Core Booking Class Diagram
+
+The diagram below shows the main booking and payment classes, their important fields, and their relationships. It is oriented top-to-bottom for a vertical layout.
+
+```mermaid
+classDiagram
+    direction TB
+
+    class ActionOrchestrator {
+        -_orders: dict~str, BookingOrder~
+        +get_order(order_id) BookingOrder
+        +list_orders(status, user_id) list
+        +handle_train_booking(...)
+        +handle_flight_booking(...)
+        +handle_movie_booking(...)
+        +handle_hotel_booking(...)
+    }
+
+    class OrderService {
+        -_orders: dict~str, dict~
+        +calculate_totals(booking_type, base_amount) dict
+        +create_order_draft(...)
+        +transition_state(order_id, next_state, reason)
+        +advance_order_lifecycle(order_id)
+        +lock_order_for_payment(order_id)
+        +get_order(order_id) dict
+        +list_user_orders(user_id, status) list
+    }
+
+    class BookingOrder {
+        +order_id: str
+        +booking_type: BookingType
+        +title: str
+        +description: str
+        +amount: float
+        +currency: str
+        +status: BookingStatus
+        +payment_status: PaymentStatus
+        +payment_session_id: str
+        +created_at: str
+        +metadata: dict
+        +to_dict() dict
+    }
+
+    class PaymentSession {
+        +payment_id: str
+        +order_id: str
+        +amount: float
+        +currency: str
+        +status: PaymentStatus
+        +checkout_url: str
+        +created_at: str
+        +to_dict() dict
+    }
+
+    class PaymentManager {
+        +mock_provider: MockPaymentProvider
+        -_active_provider: PaymentProvider
+        +get_provider() PaymentProvider
+    }
+
+    class PaymentProvider {
+        <<abstract>>
+        +provider_name: str
+        +is_real_gateway: bool
+        +create_checkout_session(order_id, amount, currency, user_id) PaymentSession
+        +verify_payment(payment_id) dict
+        +refund_payment(payment_id, amount, reason) dict
+    }
+
+    class MockPaymentProvider {
+        -_sessions: dict~str, PaymentSession~
+        +create_checkout_session(...) PaymentSession
+        +verify_payment(payment_id) dict
+        +complete_mock_payment(payment_id) PaymentSession
+        +refund_payment(payment_id, amount, reason) dict
+    }
+
+    class RazorpayProvider {
+        +key_id: str
+        +key_secret: str
+        +create_checkout_session(...) PaymentSession
+        +verify_payment(payment_id) dict
+        +refund_payment(payment_id, amount, reason) dict
+    }
+
+    class CashfreeProvider {
+        +app_id: str
+        +secret_key: str
+        +create_checkout_session(...) PaymentSession
+        +verify_payment(payment_id) dict
+        +refund_payment(payment_id, amount, reason) dict
+    }
+
+    class BookingState {
+        <<enumeration>>
+        DRAFT
+        SEARCHING
+        OPTION_SELECTED
+        REVALIDATING
+        AWAITING_USER_CONFIRMATION
+        PAYMENT_REQUIRED
+        PAYMENT_PENDING
+        PAYMENT_VERIFIED
+        BOOKING_PENDING
+        CONFIRMED
+        FAILED
+        CANCELLED
+        EXPIRED
+        UNKNOWN
+        RECONCILIATION_REQUIRED
+    }
+
+    class BookingType {
+        <<enumeration>>
+        TRAIN
+        FLIGHT
+        MOVIE
+        HOTEL
+    }
+
+    class BookingStatus {
+        <<enumeration>>
+        PENDING
+        CONFIRMED
+        CANCELLED
+        FAILED
+    }
+
+    class PaymentStatus {
+        <<enumeration>>
+        PENDING
+        PAID
+        FAILED
+        CANCELLED
+    }
+
+    class TrainProvider {
+        <<abstract>>
+        +capability: IntegrationCapability
+        +search_trains(origin, destination, date) list
+        +reserve_ticket(...) dict
+        +cancel_ticket(booking_reference) dict
+    }
+
+    class FlightProvider {
+        <<abstract>>
+        +capability: IntegrationCapability
+        +search_flights(origin, destination, date) list
+        +reserve_flight(...) dict
+        +cancel_flight(booking_reference) dict
+    }
+
+    class MovieProvider {
+        <<abstract>>
+        +capability: IntegrationCapability
+        +search_shows(query, city) list
+        +reserve_tickets(...) dict
+        +cancel_tickets(ticket_id) dict
+    }
+
+    class AccommodationProvider {
+        <<abstract>>
+        +capability: IntegrationCapability
+        +search_accommodations(city, checkin_date) list
+        +reserve_room(...) dict
+        +cancel_room(booking_id) dict
+    }
+
+    class MockTrainProvider
+    class MockFlightProvider
+    class MockMovieProvider
+    class MockAccommodationProvider
+
+    class IntegrationCapability {
+        +provider_name: str
+        +environment: ProviderEnvironment
+        +supports_search: bool
+        +supports_booking: bool
+        +supports_cancellation: bool
+        +supports_refund: bool
+        +notice_message: str
+        +to_dict() dict
+    }
+
+    ActionOrchestrator --> OrderService : creates and advances order drafts
+    ActionOrchestrator --> BookingOrder : creates and stores bookings
+    ActionOrchestrator --> PaymentManager : requests checkout sessions
+    ActionOrchestrator ..> TrainProvider : books trains
+    ActionOrchestrator ..> FlightProvider : books flights
+    ActionOrchestrator ..> MovieProvider : books movie tickets
+    ActionOrchestrator ..> AccommodationProvider : books hotel stays
+    OrderService --> BookingState : validates lifecycle transitions
+    BookingOrder --> BookingType
+    BookingOrder --> BookingStatus
+    BookingOrder --> PaymentStatus
+    PaymentSession --> PaymentStatus
+    PaymentManager o--> PaymentProvider : selects gateway
+    PaymentProvider <|.. MockPaymentProvider
+    PaymentProvider <|.. RazorpayProvider
+    PaymentProvider <|.. CashfreeProvider
+    MockPaymentProvider --> PaymentSession : stores sessions
+    TrainProvider <|.. MockTrainProvider
+    FlightProvider <|.. MockFlightProvider
+    MovieProvider <|.. MockMovieProvider
+    AccommodationProvider <|.. MockAccommodationProvider
+    TrainProvider --> IntegrationCapability
+    FlightProvider --> IntegrationCapability
+    MovieProvider --> IntegrationCapability
+    AccommodationProvider --> IntegrationCapability
+```
+
+## 3. Universal Order Lifecycle & Finite State Machine
 
 All bookings (trains, flights, movies, accommodations) follow a unified 15-state lifecycle enforced by `friday.actions.state_machine.OrderStateMachine`:
 
@@ -98,7 +310,7 @@ stateDiagram-v2
 
 ---
 
-## 3. Directory Layout
+## 4. Directory Layout
 
 ```text
 friday/

@@ -118,6 +118,32 @@ class ProviderManager:
         )
 
     @classmethod
+    def get_vision_llm(cls) -> Any:
+        google_key = config.providers.GOOGLE_API_KEY or os.getenv("GOOGLE_API_KEY")
+        openai_key = config.providers.OPENAI_API_KEY or os.getenv("OPENAI_API_KEY")
+        groq_key = config.providers.GROQ_API_KEY or os.getenv("GROQ_API_KEY")
+
+        if _is_valid_key(google_key):
+            return lk_google.LLM(
+                model=config.providers.GEMINI_MODEL,
+                api_key=google_key,
+            )
+        if _is_valid_key(openai_key):
+            return lk_openai.LLM(
+                model=config.providers.OPENAI_LLM_MODEL,
+                api_key=openai_key,
+            )
+        if _is_valid_key(groq_key):
+            return lk_groq.LLM(
+                model=config.providers.GROQ_VISION_MODEL,
+                api_key=groq_key,
+            )
+
+        raise RuntimeError(
+            "Image analysis requires a Gemini, OpenAI, or Groq vision-capable API key."
+        )
+
+    @classmethod
     def get_tts(cls) -> Any:
         primary = config.providers.PRIMARY_TTS.lower()
         fallback = config.providers.FALLBACK_TTS.lower()

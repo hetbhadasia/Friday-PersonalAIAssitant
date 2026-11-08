@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1500" viewBox="0 0 1200 750" fill="none">
+  <title>FRIDAY AI Assistant — Space / Sci-Fi Logo</title>
+  <desc>Transparent vector logo with spaced FRIDAY lettering, a central blue star beam, orbital arc, and AI ASSISTANT subtitle.</desc>
+  <defs>
+    <linearGradient id="letterFill" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.48" stop-color="#EAF5FF"/>
+      <stop offset="1" stop-color="#A8D7FF"/>
+    </linearGradient>
+    <linearGradient id="beamFill" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#063D9C" stop-opacity="0"/>
+      <stop offset="0.35" stop-color="#147BFF"/>
+      <stop offset="0.5" stop-color="#FFFFFF"/>
+      <stop offset="0.65" stop-color="#18BFFF"/>
+      <stop offset="1" stop-color="#063D9C" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="orbitStroke" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2A8DFF" stop-opacity="0.25"/>
+      <stop offset="0.35" stop-color="#E6F8FF"/>
+      <stop offset="0.62" stop-color="#55AFFF"/>
+      <stop offset="1" stop-color="#153EAA" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="subtitleFill" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7EC8FF"/>
+      <stop offset="0.5" stop-color="#E7F5FF"/>
+      <stop offset="1" stop-color="#8BBFFF"/>
+    </linearGradient>
+    <radialGradient id="flareCore">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.25" stop-color="#E9FCFF"/>
+      <stop offset="0.55" stop-color="#40C5FF"/>
+      <stop offset="1" stop-color="#087BFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softBlueGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.03 0 0 0 0 0.35 0 0 0 0 1 0 0 0 0.8 0" result="blue"/>
+      <feMerge><feMergeNode in="blue"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="tinyGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="2.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Orbital sweep behind the wordmark -->
+  <path d="M 610 236 C 685 236, 737 273, 753 337" stroke="#087BFF" stroke-opacity=".18" stroke-width="13" stroke-linecap="round" filter="url(#softBlueGlow)"/>
+  <path d="M 610 236 C 685 236, 737 273, 753 337" stroke="url(#orbitStroke)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 750 456 C 731 500, 677 526, 610 530" stroke="#087BFF" stroke-opacity=".22" stroke-width="10" stroke-linecap="round" filter="url(#softBlueGlow)"/>
+  <path d="M 750 456 C 731 500, 677 526, 610 530" stroke="url(#orbitStroke)" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Subtle central beam glow -->
+  <path d="M 600 170 L 600 558" stroke="#087BFF" stroke-opacity=".35" stroke-width="19" filter="url(#softBlueGlow)"/>
+  <path d="M 600 170 L 600 558" stroke="url(#beamFill)" stroke-width="5" filter="url(#tinyGlow)"/>
+  <path d="M 600 174 L 600 556" stroke="#DDF7FF" stroke-opacity=".9" stroke-width="1.25"/>
+
+  <!-- Wordmark, custom-spaced for the original thin sci-fi look -->
+  <g fill="url(#letterFill)" stroke="#D7EEFF" stroke-opacity=".7" stroke-width=".7" font-family="Montserrat, Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="66" font-weight="300" text-anchor="middle">
+    <text x="268" y="426">F</text>
+    <text x="382" y="426">R</text>
+    <text x="493" y="426">I</text>
+    <text x="679" y="426">D</text>
+    <text x="807" y="426">A</text>
+    <text x="934" y="426">Y</text>
+  </g>
+
+  <!-- Fine letter highlights to retain a crisp metallic finish -->
+  <g stroke="#FFFFFF" stroke-opacity=".5" stroke-width="1">
+    <path d="M 246 374 H 287 M 246 374 V 424 M 246 399 H 277"/>
+    <path d="M 359 374 V 424 M 359 374 H 388 Q 408 374 408 391 Q 408 405 388 405 H 359 M 386 405 L 411 424"/>
+    <path d="M 657 374 V 424 M 657 374 H 680 Q 704 374 704 399 Q 704 424 680 424 H 657"/>
+    <path d="M 785 424 L 807 374 L 830 424 M 793 407 H 822"/>
+    <path d="M 911 374 L 934 399 L 957 374 M 934 399 V 424"/>
+  </g>
+
+  <!-- Star flare at the top of the central beam -->
+  <circle cx="600" cy="236" r="28" fill="url(#flareCore)" opacity=".9"/>
+  <path d="M 600 207 L 605 230 L 628 236 L 605 242 L 600 265 L 595 242 L 572 236 L 595 230 Z" fill="#EAFBFF" filter="url(#tinyGlow)"/>
+  <path d="M 600 214 V 258 M 578 236 H 622" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Beam end glint -->
+  <circle cx="600" cy="530" r="13" fill="url(#flareCore)" opacity=".85"/>
+  <path d="M 600 520 L 603 528 L 611 531 L 603 534 L 600 542 L 597 534 L 589 531 L 597 528 Z" fill="#EAFBFF" filter="url(#tinyGlow)"/>
+
+  <!-- Sparse orbit particles -->
+  <circle cx="482" cy="286" r="1.8" fill="#6ADFFF"/>
+  <circle cx="749" cy="483" r="1.7" fill="#48C8FF"/>
+  <circle cx="324" cy="584" r="1.5" fill="#4DADFF" opacity=".75"/>
+
+  <!-- Subtitle -->
+  <text x="600" y="604" text-anchor="middle" fill="url(#subtitleFill)" font-family="Montserrat, Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="25" font-weight="400" letter-spacing="11">AI ASSISTANT</text>
+  <path d="M 430 622 H 770" stroke="#298BFF" stroke-opacity=".24" stroke-width="1"/>
+</svg>

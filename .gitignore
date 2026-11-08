@@ -183,3 +183,19 @@ pyrightconfig.json
 *.greeting-backup
 
 *.time-backup
+
+# Node.js dependencies and build output
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+
+# Local environment and secrets
+.env.*
+!.env.example
+
+# Editor settings
+.vscode/
+
+# macOS
+.DS_Store
